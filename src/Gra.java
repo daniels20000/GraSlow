@@ -1,11 +1,11 @@
-import javafx.application.Application;
-import javafx.event.ActionEvent;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.scene.control.*;
 
@@ -30,7 +30,13 @@ public class Gra {
     private Timer timer = new Timer(true);
     private Gracz gracz;
 
+    private VBox vBox1 = new VBox(50);
+    private VBox vBox2 = new VBox(50);
+
+    Label label2;
+
     Gra() {
+        gracz=new Gracz();
         rozpocznij();
 
     }
@@ -112,19 +118,27 @@ public class Gra {
             e.consume();
 
             stage.setScene(Main.scene);
+            gameOver();
+
             stage.setOnCloseRequest(event -> this.close());
 
         });
 
     }
 
+
+
     private void tura() {
 
 
-        VBox vBox1 = new VBox(50);
-        VBox vBox2 = new VBox(50);
 
-        Label label = new Label();
+
+        Label label1 = new Label();
+        label1.setMinWidth(100);
+        label2 = new Label();
+        label2.setTextAlignment(TextAlignment.RIGHT);
+        HBox czasPunkty = new HBox(label1,label2);
+
 
         HBox hBox = new HBox(25);
         hBox.setAlignment(Pos.CENTER);
@@ -132,13 +146,13 @@ public class Gra {
         hBox.getChildren().addAll(vBox1, vBox2);
         BorderPane borderPane = new BorderPane();
         borderPane.setCenter(hBox);
-        borderPane.setTop(label);
+        borderPane.setTop(czasPunkty);
 
 
 
         Scene turaScene = new Scene(borderPane, 400, 300);
 
-        kolejneSlowo(turaScene,vBox1, vBox2);
+        kolejneSlowo();
 
         timer.schedule(new TimerTask() {
 
@@ -150,26 +164,30 @@ public class Gra {
                 System.out.println(licznikTura);
                 // System.out.println(licznik);
                 licznikTura--;
-                label.setText(Integer.toString(licznikTura));
+                Platform.runLater(() -> label1.setText(Integer.toString(licznikTura)));
                 if (licznikTura == 0) {
 
                     cancel();
                     timer.cancel();
+                    gameOver();
                 }
 
             }
         }, 2000, 1000);
 
-
+        stage.setScene(turaScene);
     }
 
-    private boolean kolejneSlowo(Scene scene,VBox vBox1, VBox vBox2) {
+    private void kolejneSlowo() {
+
+        vBox1.getChildren().clear();
+        vBox2.getChildren().clear();
 
         int i = rnd.nextInt(slowoArrayList.size());
 
         while (index.contains(i))
             i=rnd.nextInt(slowoArrayList.size());
-        if(index.size()>slowoArrayList.size()) return false;
+        if(index.size()>slowoArrayList.size())
 
         index.add(i);
         Slowo slowo = slowoArrayList.get(i);
@@ -179,6 +197,28 @@ public class Gra {
         Button button3 = new Button();
         Button button4 = new Button();
 
+        button1.setOnAction(event -> {
+            dodaj();
+            kolejneSlowo();
+
+        });
+        button2.setOnAction(event -> {
+            odejmij();
+            kolejneSlowo();
+
+        });
+        button3.setOnAction(event -> {
+            odejmij();
+            kolejneSlowo();
+
+        });
+        button4.setOnAction(event -> {
+            odejmij();
+            kolejneSlowo();
+
+        });
+
+
         switch (slowo.ileWyrazow()){
             case 1:{
                 button1.setText(slowo.text.toString());
@@ -187,7 +227,7 @@ public class Gra {
             }break;
             case 2:{
                 button1.setText(slowo.text.toString());
-                button1.setText(slowo.zleSlowa.get(0).toString());
+                button2.setText(slowo.zleSlowa.get(0).toString());
 
 
 
@@ -197,22 +237,119 @@ public class Gra {
                     vBox1.getChildren().addAll(button2,button1);
 
             }break;
+            case 3:{
+                button1.setText(slowo.text.toString());
+                button2.setText(slowo.zleSlowa.get(0).toString());
+                button3.setText(slowo.zleSlowa.get(1).toString());
+
+                switch (rnd.nextInt(3)){
+                    case 0:{
+                        vBox1.getChildren().addAll(button1,button2);
+                        vBox2.getChildren().add(button3);
+
+                    }break;
+
+                    case 1:{
+                        vBox1.getChildren().addAll(button3,button1);
+                        vBox2.getChildren().add(button2);
+
+                    }break;
+
+                    case 2:{
+                        vBox1.getChildren().addAll(button2,button3);
+                        vBox2.getChildren().add(button1);
+
+                    }break;
+
+                }
+
+            }break;
+
+            case 4:{
+                button1.setText(slowo.text.toString());
+                button2.setText(slowo.zleSlowa.get(0).toString());
+                button3.setText(slowo.zleSlowa.get(1).toString());
+                button4.setText(slowoArrayList.get(2).toString());
+                switch (rnd.nextInt(4)){
+                    case 0:{
+                        vBox1.getChildren().addAll(button1,button2);
+                        vBox2.getChildren().addAll(button3,button4);
+
+                    }break;
+
+                    case 1:{
+                        vBox1.getChildren().addAll(button4,button1);
+                        vBox2.getChildren().addAll(button2,button3);
+
+                    }break;
+
+                    case 2:{
+                        vBox1.getChildren().addAll(button3,button4);
+                        vBox2.getChildren().addAll(button1,button2);
+
+                    }break;
+                    case 3:{
+                        vBox1.getChildren().addAll(button2,button3);
+                        vBox2.getChildren().addAll(button4,button1);
+                    }break;
+
+                    default:{
+                        kolejneSlowo();
+                    }
+
+                }
+
+
+
+            }break;
 
         }
 
 
+    }
+
+    private void dodaj() {
+        gracz.wynik+=100;
+        label2.setText(Integer.toString(gracz.wynik));
+    }
+
+    private void odejmij() {
+
+       if(gracz.wynik>0) {
+           switch (licznik) {
+               case 40: {
+                   gracz.wynik -= 200;
+
+               }
+               break;
+               case 50: {
+                   gracz.wynik -= 100;
+               }
+               break;
+               case 60: {
+                   gracz.wynik -= 50;
+               }
+               break;
+           }
+           label2.setText(Integer.toString(gracz.wynik));
+       }
+
+    }
 
 
+    private void gameOver() {
 
-        return true;
+    Platform.runLater(()->{
+        Wyniki.graczArrayList.add(gracz);
+        Wyniki.gracze.add(gracz);
+        close();
+    });
 
-        }
+    }
 
-
-
-
-    public void close() {
+    private void close() {
         Main.okno.setScene(Main.scene);
+        timer.cancel();
     }
 
 }

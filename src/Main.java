@@ -1,5 +1,6 @@
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
@@ -22,9 +23,10 @@ public class Main extends Application  {
     public static Thread thread;
     public static Stage okno;//stage okno jako static, żeby nie trzeba było tworzyć nowych Stage'ów tylko podmienić scenę
     public static Scene scene;
+    private boolean startRequest=false;
+    private Okno graLaduje;
 
 
-    private boolean ukonczono =false;
 
 
     public static void main(String[] args) {
@@ -61,9 +63,9 @@ public class Main extends Application  {
             if(!thread.isAlive()) {
                 Gra gra = new Gra();
             }else {
-                Okno okno = new Okno();
-                okno.wyswietl("ładowanie..","Gra ładuje się. Spróbuj za chwilę");
-
+                graLaduje = new Okno();
+                graLaduje.wyswietl("ładowanie..","Gra ładuje się. ");
+                startRequest=true;
             }
 // Gra gra = new Gra();
 
@@ -130,7 +132,7 @@ public class Main extends Application  {
            while (scanner.hasNext()){
 
                String s = scanner.nextLine();
-               if(rnd.nextInt(30000)==0)strings.add(s);
+               if(rnd.nextInt(5000)==0)strings.add(s);
 
                //System.out.println(strings.size());//do debugowania
          }
@@ -140,16 +142,22 @@ public class Main extends Application  {
             System.out.println(ex1.getMessage());
         //System.out.println("błąd");
         }
-        //pętla while tworząca 50 obiektów klasy Slowo
-            while (slowoArrayList.size()<50) {
+        //pętla while tworząca 150 obiektów klasy Slowo
+            while (slowoArrayList.size()<150) {
                 int i = rnd.nextInt(strings.size());
-                if(!slowoArrayList.contains(new Slowo(strings.get(i))))
-                slowoArrayList.add(new Slowo(strings.get(i)));
-
+                if(!slowoArrayList.contains(new Slowo(strings.get(i)))) {
+                    Slowo s = new Slowo(strings.get(i));
+                    if(!(s.ileWyrazow()==1))slowoArrayList.add(s);
+                }
             }
         strings.clear();
         Collections.shuffle(slowoArrayList);
-        ukonczono = true;
+        if(startRequest)
+            Platform.runLater(() -> {
+                Gra gra = new Gra();
+                graLaduje.close();
+            });
+
 
         }
 

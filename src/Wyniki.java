@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -19,7 +20,8 @@ import java.util.Scanner;
 public  class Wyniki {
 
    static   TableView<Gracz> table;
-
+   static ArrayList<Gracz> graczArrayList= new ArrayList<>();
+    static ObservableList<Gracz> gracze = FXCollections.observableArrayList();
 
     Wyniki(){
         wyswietl();
@@ -57,7 +59,7 @@ public  class Wyniki {
     }
 
     private ObservableList<Gracz> getPlayers() {
-        ObservableList<Gracz> gracze = FXCollections.observableArrayList();
+
 
 
         File plik = new File("Resources/gracze.txt");
@@ -67,9 +69,9 @@ public  class Wyniki {
             Scanner scanner = new Scanner(plik);
 
             while (scanner.hasNext()) {
-
-                gracze.add(new Gracz(scanner.next(), scanner.next(), scanner.next()));
-
+                Gracz gracz = new Gracz(scanner.next(), scanner.next(), scanner.next());
+                gracze.add(gracz);
+                graczArrayList.add(gracz);
             }
             scanner.close();
         } catch (IOException ex1) {
