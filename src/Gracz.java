@@ -1,3 +1,4 @@
+
 public class Gracz {
     String nazwa;
     int wynik;

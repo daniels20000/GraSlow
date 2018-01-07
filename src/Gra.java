@@ -9,6 +9,9 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.scene.control.*;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Timer;
@@ -120,7 +123,21 @@ public class Gra {
             stage.setScene(Main.scene);
             gameOver();
 
-            stage.setOnCloseRequest(event -> this.close());
+            stage.setOnCloseRequest(event -> {
+                File file = new File("Resources/gracze.txt");
+                try {
+                    PrintWriter printWriter = new PrintWriter(file);
+                    for (Gracz g :Wyniki.graczArrayList){
+                        printWriter.println(g.nazwa);
+                        printWriter.println(g.wynik);
+                        printWriter.println(g.trudnosc);
+
+                    }
+                    printWriter.close();
+                } catch (FileNotFoundException er) {
+                    er.printStackTrace();
+                }
+            });
 
         });
 
@@ -167,9 +184,13 @@ public class Gra {
                 Platform.runLater(() -> label1.setText(Integer.toString(licznikTura)));
                 if (licznikTura == 0) {
 
+
+                    gameOver();
+                    Platform.runLater(()->{
+                        Main.okno.setScene(Main.scene);
+                    });
                     cancel();
                     timer.cancel();
-                    gameOver();
                 }
 
             }
@@ -331,25 +352,24 @@ public class Gra {
                }
                break;
            }
-           label2.setText(Integer.toString(gracz.wynik));
-       }
 
+       }
+        label2.setText(Integer.toString(gracz.wynik));
     }
 
 
     private void gameOver() {
-
-    Platform.runLater(()->{
         Wyniki.graczArrayList.add(gracz);
         Wyniki.gracze.add(gracz);
-        close();
-    });
+
+
+
 
     }
 
     private void close() {
         Main.okno.setScene(Main.scene);
-        timer.cancel();
+
     }
 
 }

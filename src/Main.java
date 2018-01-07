@@ -95,11 +95,25 @@ public class Main extends Application  {
 
         //endregion
 
+        okno.setOnCloseRequest(event -> {
+            File file = new File("Resources/gracze.txt");
+            try {
+                PrintWriter printWriter = new PrintWriter(file);
+                for (Gracz g :Wyniki.graczArrayList){
+                    printWriter.println(g.nazwa);
+                    printWriter.println(g.wynik);
+                    printWriter.println(g.trudnosc);
+
+                }
+                printWriter.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        });
 
 
 
-
-        vBox.getChildren().addAll(bStart,bInstrukcja,bWyniki,bZakoncz);//dodawanie przycisków do vBox
+        vBox.getChildren().addAll(bStart,bInstrukcja,bWyniki);//dodawanie przycisków do vBox
         menu.setCenter(vBox);//dodawanie vBox do menu
 
 
