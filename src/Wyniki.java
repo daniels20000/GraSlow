@@ -27,7 +27,7 @@ public  class Wyniki {
         wyswietl();
     }
 
-    public void wyswietl() {
+    private void wyswietl() {
         Stage stage = new Stage();
         stage.setTitle("Wyniki");
 

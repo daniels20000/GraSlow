@@ -84,6 +84,10 @@ Slowo(String text ){
     return stringBuilder;
 }//Podmien
 
+    /**
+     * Metoda zwracająca ilość wyrazów (poprawny+błędne)
+     * @return ilość wyrazów razem z poprawnym wyrazem
+     */
     public int ileWyrazow (){
         return zleSlowa.size()+1;
     }

@@ -1,8 +1,6 @@
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -19,8 +17,8 @@ import java.util.*;
  */
 public class Main extends Application  {
     public static ArrayList<Slowo> slowoArrayList = new ArrayList<>();
-    public static ArrayList<String> strings = new ArrayList<>();
-    public static Thread thread;
+    private static ArrayList<String> strings = new ArrayList<>();
+    private static Thread thread;
     public static Stage okno;//stage okno jako static, żeby nie trzeba było tworzyć nowych Stage'ów tylko podmienić scenę
     public static Scene scene;
     private boolean startRequest=false;

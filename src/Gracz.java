@@ -1,4 +1,7 @@
-
+/**
+ * Klasa Gracz reprezentująca graczy
+ * @author Daniel Szuta
+ */
 public class Gracz {
     String nazwa;
     int wynik;

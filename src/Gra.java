@@ -36,7 +36,7 @@ public class Gra {
     private VBox vBox1 = new VBox(50);
     private VBox vBox2 = new VBox(50);
 
-    Label label2;
+    private Label label2;
 
     Gra() {
         gracz=new Gracz();
@@ -44,7 +44,7 @@ public class Gra {
 
     }
 
-    public void rozpocznij() {
+    private void rozpocznij() {
 
 
         stage.setTitle("Gra Słów");
